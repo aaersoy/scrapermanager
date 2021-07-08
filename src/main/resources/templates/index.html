@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Bootstrap User Management Data Table</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <style>
+      body {
+          color: #566787;
+          background: #f5f5f5;
+          font-family: 'Varela Round', sans-serif;
+          font-size: 13px;
+      }
+
+      .table-responsive {
+          margin: 30px 0;
+      }
+
+      .table-wrapper {
+          min-width: 1000px;
+          background: #fff;
+          padding: 20px 25px;
+          border-radius: 3px;
+          box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+      }
+
+      .table-title {
+          padding-bottom: 15px;
+          background: #299be4;
+          color: #fff;
+          padding: 16px 30px;
+          margin: -20px -25px 10px;
+          border-radius: 3px 3px 0 0;
+      }
+
+      .table-title h2 {
+          margin: 5px 0 0;
+          font-size: 24px;
+      }
+
+      .table-title .btn {
+          color: #566787;
+          float: right;
+          font-size: 13px;
+          background: #fff;
+          border: none;
+          min-width: 50px;
+          border-radius: 2px;
+          border: none;
+          outline: none !important;
+          margin-left: 10px;
+      }
+
+      .table-title .btn:hover, .table-title .btn:focus {
+          color: #566787;
+          background: #f2f2f2;
+      }
+
+      .table-title .btn i {
+          float: left;
+          font-size: 21px;
+          margin-right: 5px;
+      }
+
+      .table-title .btn span {
+          float: left;
+          margin-top: 2px;
+      }
+
+      table.table tr th, table.table tr td {
+          border-color: #e9e9e9;
+          padding: 12px 15px;
+          vertical-align: middle;
+      }
+
+      table.table tr th:first-child {
+          width: 60px;
+      }
+
+      table.table tr th:last-child {
+          width: 100px;
+      }
+
+      table.table-striped tbody tr:nth-of-type(odd) {
+          background-color: #fcfcfc;
+      }
+
+      table.table-striped.table-hover tbody tr:hover {
+          background: #f5f5f5;
+      }
+
+      table.table th i {
+          font-size: 13px;
+          margin: 0 5px;
+          cursor: pointer;
+      }
+
+      table.table td:last-child i {
+          opacity: 0.9;
+          font-size: 22px;
+          margin: 0 5px;
+      }
+
+      table.table td a {
+          font-weight: bold;
+          color: #566787;
+          display: inline-block;
+          text-decoration: none;
+      }
+
+      table.table td a:hover {
+          color: #2196F3;
+      }
+
+      table.table td a.settings {
+          color: #2196F3;
+      }
+
+      table.table td a.delete {
+          color: #F44336;
+      }
+
+      table.table td i {
+          font-size: 19px;
+      }
+
+      table.table .avatar {
+          display: block;
+          max-width: 5%;
+          height: auto;
+      }
+
+      .status {
+          font-size: 30px;
+          margin: 2px 2px 0 0;
+          display: inline-block;
+          vertical-align: middle;
+          line-height: 10px;
+      }
+
+      .text-success {
+          color: #10c469;
+      }
+
+      .text-info {
+          color: #62c9e8;
+      }
+
+      .text-warning {
+          color: #FFC107;
+      }
+
+      .text-danger {
+          color: #ff5b5b;
+      }
+
+      .pagination {
+          float: right;
+          margin: 0 0 5px;
+      }
+
+      .pagination li a {
+          border: none;
+          font-size: 13px;
+          min-width: 30px;
+          min-height: 30px;
+          color: #999;
+          margin: 0 2px;
+          line-height: 30px;
+          border-radius: 2px !important;
+          text-align: center;
+          padding: 0 6px;
+      }
+
+      .pagination li a:hover {
+          color: #666;
+      }
+
+      .pagination li.active a, .pagination li.active a.page-link {
+          background: #03A9F4;
+      }
+
+      .pagination li.active a:hover {
+          background: #0397d6;
+      }
+
+      .pagination li.disabled i {
+          color: #ccc;
+      }
+
+      .pagination li i {
+          font-size: 16px;
+          padding-top: 6px
+      }
+
+      .hint-text {
+          float: left;
+          margin-top: 10px;
+          font-size: 13px;
+      }
+
+
+
+
+      {box-sizing: border-box;}
+
+      /* Button used to open the contact form - fixed at the bottom of the page */
+      .open-button {
+          background-color: #555;
+          color: white;
+          padding: 16px 20px;
+          border: none;
+          cursor: pointer;
+          opacity: 0.8;
+          position: fixed;
+          bottom: 23px;
+          right: 28px;
+          width: 280px;
+      }
+
+      /* The popup form - hidden by default */
+      .form-popup {
+          display: none;
+          position: fixed;
+          bottom: 0;
+          right: 15px;
+          border: 3px solid #f1f1f1;
+          z-index: 9;
+      }
+
+      /* Add styles to the form container */
+      .form-container {
+          max-width: 300px;
+          padding: 10px;
+          background-color: white;
+      }
+
+      /* Full-width input fields */
+      .form-container input[type=text], .form-container input[type=password],textarea {
+          width: 100%;
+          padding: 15px;
+          margin: 5px 0 22px 0;
+          border: none;
+          background: #f1f1f1;
+      }
+
+      /* When the inputs get focus, do something */
+      .form-container input[type=text]:focus, .form-container input[type=password]:focus ,textarea{
+          background-color: #ddd;
+          outline: none;
+      }
+
+      /* Set a style for the submit/login button */
+      .form-container .btn {
+          background-color: #04AA6D;
+          color: white;
+          padding: 16px 20px;
+          border: none;
+          cursor: pointer;
+          width: 100%;
+          margin-bottom:10px;
+          opacity: 0.8;
+      }
+
+      /* Add a red background color to the cancel button */
+      .form-container .cancel {
+          background-color: red;
+      }
+
+      /* Add some hover effects to buttons */
+      .form-container .btn:hover, .open-button:hover {
+          opacity: 1;
+      }
+
+  </style>
+</head>
+<body>
+<div class="container-xl">
+  <div class="table-responsive">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-5">
+            <h2>Bot Management</h2>
+          </div>
+          <div class="col-sm-7">
+            <a href="#" class="btn btn-secondary" onclick="openForm()"><i class="material-icons">&#xE147;</i>
+              <span>Add New User</span></a>
+            <a href="#" class="btn btn-secondary"><i class="material-icons">&#xE24D;</i> <span>Export to Excel</span></a>
+          </div>
+        </div>
+      </div>
+      <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+          <th>#</th>
+          <th>Bot Name</th>
+          <th>Created Date</th>
+          <th>Sent</th>
+          <th>NotSent</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="redditBot : ${modelData.get('redditBots')}">
+          <td th:text="${redditBot.id}"></td>
+          <td th:text="${redditBot.botName}"></td>
+          <td th:text="${redditBot.createdDate}"></td>
+          <td th:text="${redditBot.sent}"></td>
+          <td th:text="${redditBot.notSent}"></td>
+          <td th:text="${redditBot.total}"></td>
+          <span th:switch="${#strings.toString(redditBot.status)}">
+            <td th:case="'RUNNING'"><span class="status text-success">&bull;</span> Running</td>
+            <td th:case="'SUCCESSED'"><span class="status text-success">&bull;</span> Completed</td>
+            <td th:case="'STOPPED'"><span class="status text-warning">&bull;</span> Stopped</td>
+            <td th:case="'PENDING'" ><span class="status text-warning">&bull;</span> Pending</td>
+            <td th:case="'FAILED'"><span class="status text-danger">&bull;</span> Failed</td>
+          </span>
+
+          <td><span class="status text-success">&bull;</span> Active</td>
+          <td>
+            <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i
+                class="material-icons">&#xE8B8;</i></a>
+            <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i
+                class="material-icons">&#xE5C9;</i></a>
+          </td>
+        </tr>
+        </tbody>
+
+      </table>
+
+      <div class="form-popup" id="botCreateForm">
+        <form class="form-container">
+          <h1>Login</h1>
+
+          <label><b>Bot Name</b></label>
+          <input type="text" placeholder="Enter Bot Name" id="newBotName" required>
+
+          <label><b>Bot Name</b></label>
+          <input type="text" placeholder="Enter Message" id="newBotMessage" required>
+
+          <label><b>User Names</b></label>
+          <textarea placeholder="Enter usernames by seperating with comma" id="newBotUserNames" required></textarea>
+
+          <input type="checkbox" id="newPmOrDm">
+          <label>If pm then check(default is dm)</label>
+          <br>
+          <input type="checkbox" id="newResend">
+          <label>Is message send to sent users?</label>
+
+          <button type="submit" class="btn">Login</button>
+          <button type="submit" class="btn cancel" onclick="closeForm()">Close</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+<script>
+
+  $(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+
+  function openForm() {
+    document.getElementById("botCreateForm").style.display = "block";
+  }
+
+  function closeForm() {
+    document.getElementById("botCreateForm").style.display = "none";
+  }
+
+  $('#botCreateForm').submit(function (e){
+    e.preventDefault();
+    var botData = {}
+
+    if($('#newPmOrDm').val()== "on"){
+      botData['isPm'] = true;
+    }else{
+      botData['isPm'] = false;
+    }
+
+    if($('#newResend').val()== "on"){
+      botData['isOverWrite'] = true;
+    }else{
+      botData['isOverWrite'] = false;
+    }
+
+    botData['botName'] = $('#newBotName').val();
+    botData['message'] = $('#newBotMessage').val();
+    botData['userNames'] = $('#newBotUserNames').val().split(",");
+
+
+    $.ajax({
+      type:"post",
+      contentType:"application/json",
+      url:"/initializeredditbot",
+      data:JSON.stringify(botData),
+      dataType:"json",
+      statusCode:{
+
+      }
+    });
+
+  })
+
+
+</script>
+</html>
+
