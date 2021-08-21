@@ -129,6 +129,10 @@
           color: #F44336;
       }
 
+      table.table td a.run {
+        color: darkgreen;
+      }
+
       table.table td i {
           font-size: 19px;
       }
@@ -239,9 +243,11 @@
 
       /* Add styles to the form container */
       .form-container {
-          max-width: 300px;
+          max-width: 500px;
+          height: 700px;
           padding: 10px;
           background-color: white;
+          overflow-y: scroll;
       }
 
       /* Full-width input fields */
@@ -293,9 +299,11 @@
             <h2>Bot Management</h2>
           </div>
           <div class="col-sm-7">
+            <a href="/" class="btn btn-secondary" onclick="openForm()"><i class="material-icons">&#xE147;</i>
+              <span>Refresh</span></a>
             <a href="#" class="btn btn-secondary" onclick="openForm()"><i class="material-icons">&#xE147;</i>
-              <span>Add New User</span></a>
-            <a href="#" class="btn btn-secondary"><i class="material-icons">&#xE24D;</i> <span>Export to Excel</span></a>
+              <span>Add Reddit Bot</span></a>
+
           </div>
         </div>
       </div>
@@ -327,39 +335,53 @@
             <td th:case="'PENDING'" ><span class="status text-warning">&bull;</span> Pending</td>
             <td th:case="'FAILED'"><span class="status text-danger">&bull;</span> Failed</td>
           </span>
-
-          <td><span class="status text-success">&bull;</span> Active</td>
           <td>
-            <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i
-                class="material-icons">&#xE8B8;</i></a>
-            <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i
+            <a th:href="'deleteredditbot?id='+${redditBot.id}" class="delete" title="Delete" data-toggle="tooltip"><i
                 class="material-icons">&#xE5C9;</i></a>
+            <a th:href="'runredditbot?id='+${redditBot.id}" class="run" title="Run" data-toggle="tooltip"><i
+                    class="material-icons">&#xe037;</i></a>
           </td>
         </tr>
         </tbody>
 
       </table>
 
-      <div class="form-popup" id="botCreateForm">
-        <form class="form-container">
-          <h1>Login</h1>
+      <div class="form-popup" id="botCreateForm" >
+        <form class="form-container" >
+          <h1>Reddit Bot  Register</h1>
 
           <label><b>Bot Name</b></label>
           <input type="text" placeholder="Enter Bot Name" id="newBotName" required>
 
-          <label><b>Bot Name</b></label>
+          <label><b>Message</b></label>
           <input type="text" placeholder="Enter Message" id="newBotMessage" required>
 
           <label><b>User Names</b></label>
           <textarea placeholder="Enter usernames by seperating with comma" id="newBotUserNames" required></textarea>
 
+          <label><b>Client Id</b></label>
+          <input type="text" placeholder="Enter Client Client Id" id="newClientId" required>
+
+          <label><b>Client Secret</b></label>
+          <input type="text" placeholder="Enter Client Secret" id="newCLientSecret" required>
+
+          <label><b>Account UserName</b></label>
+          <input type="text" placeholder="Enter Account UserName" id="newAccountUserName" required>
+
+          <label><b>Account Password</b></label>
+          <input type="text" placeholder="Enter Account Password" id="newAccountPassword" required>
+
+          <label><b>User Agent</b></label>
+          <input type="text" placeholder="Enter User Agent" id="newUserAgent" required>
+
+          <label><b>Project Path</b></label>
+          <input type="text" placeholder="Enter Project Path" id="newProjectPath" required>
+
           <input type="checkbox" id="newPmOrDm">
           <label>If pm then check(default is dm)</label>
           <br>
-          <input type="checkbox" id="newResend">
-          <label>Is message send to sent users?</label>
 
-          <button type="submit" class="btn">Login</button>
+          <button type="submit" class="btn">Save</button>
           <button type="submit" class="btn cancel" onclick="closeForm()">Close</button>
         </form>
       </div>
@@ -376,6 +398,7 @@
 
   function openForm() {
     document.getElementById("botCreateForm").style.display = "block";
+    document.getElementById("botCreateForm").style.display;
   }
 
   function closeForm() {
@@ -384,24 +407,26 @@
 
   $('#botCreateForm').submit(function (e){
     e.preventDefault();
-    var botData = {}
+    var botData = {};
+    var isPmCheck=document.querySelector('#newPmOrDm').checked
 
-    if($('#newPmOrDm').val()== "on"){
+
+    if(isPmCheck){
       botData['isPm'] = true;
     }else{
       botData['isPm'] = false;
     }
 
-    if($('#newResend').val()== "on"){
-      botData['isOverWrite'] = true;
-    }else{
-      botData['isOverWrite'] = false;
-    }
 
     botData['botName'] = $('#newBotName').val();
     botData['message'] = $('#newBotMessage').val();
     botData['userNames'] = $('#newBotUserNames').val().split(",");
-
+    botData['clientId'] = $('#newClientId').val();
+    botData['clientSecret'] = $('#newCLientSecret').val();
+    botData['loginUserName'] = $('#newAccountUserName').val();
+    botData['redditPassword'] = $('#newAccountPassword').val();
+    botData['userAgent'] = $('#newUserAgent').val();
+    botData['projectPath'] = $('#newProjectPath').val();
 
     $.ajax({
       type:"post",
@@ -413,6 +438,7 @@
 
       }
     });
+    window.location.href="/";
 
   })
 

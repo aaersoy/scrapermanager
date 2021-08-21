@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
+
+import com.example.scrapermanager.utils.BotStatus;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import sun.misc.Queue;
+
 
 @Service
 @Qualifier("DataBaseService")
@@ -41,6 +43,34 @@ public class DataBaseService {
 
   public List<RedditBot> getRedditBotList(){
     return redditBotList;
+  }
+
+  public void updateBotStatus(Long id, BotStatus status){
+    for (int i = 0; i < redditBotList.size(); i++) {
+      if(redditBotList.get(i).getId()==id){
+        redditBotList.get(i).setStatus(status);
+        break;
+      }
+    }
+  }
+
+  public void updateNotSentCount(Long id, int count){
+    for (int i = 0; i < redditBotList.size(); i++) {
+      if(redditBotList.get(i).getId()==id){
+        redditBotList.get(i).setNotSent(count);
+        break;
+      }
+    }
+  }
+
+  public void updateBot(Long id, RedditBot redditBot){
+    for (int i = 0; i < redditBotList.size(); i++) {
+      if(redditBotList.get(i).getId()==id){
+        redditBotList.remove(redditBotList.get(i));
+        redditBotList.add(redditBot);
+        break;
+      }
+    }
   }
 
 }

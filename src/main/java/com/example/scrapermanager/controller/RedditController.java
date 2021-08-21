@@ -13,7 +13,6 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.*;
 import javax.validation.Valid;
-import jdk.internal.util.xml.impl.ReaderUTF8;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -69,35 +68,31 @@ public class RedditController {
   }
 
   @PostMapping(value="/initializeredditbot")
-  public ResponseEntity<Object> initializeRedditBot(@Valid@RequestBody RequestInitializeRedditBot requestInitializeRedditBot){
+  public ModelAndView initializeRedditBot(@Valid@RequestBody RequestInitializeRedditBot requestInitializeRedditBot){
     redditService.createRedditBot(requestInitializeRedditBot);
-    return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    return currentValues();
   }
 
   @GetMapping(value="/getallredditbotid")
   public ResponseEntity<Object> getAllRedditBotId() throws IOException {
-    Runtime runtime = Runtime.getRuntime();
-    String[] commands  = {"python","devices"};
-    Process process = runtime.exec(commands);
-
-
-    System.out.println("****INFO*****");
-    BufferedReader lineReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-    lineReader.lines().forEach(System.out::println);
-
-
-
-
-    System.out.println("****ERROR*****");
-    BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-    errorReader.lines().forEach(System.out::println);
-
     return new ResponseEntity<Object>(redditService.getAllRedditBotId(),HttpStatus.ACCEPTED);
   }
 
   @RequestMapping("/runredditbot")
-  public void runBot(@RequestParam Long id,String name){
-    redditService.runBot(id,name);
+  public ModelAndView runBot(@RequestParam Long id){
+    redditService.runBot(id);
+    return currentValues();
+  }
+
+  @RequestMapping("/deleteredditbot")
+  public ModelAndView deleteBot(@RequestParam Long id){
+    try {
+      redditService.deleteBot(id);
+      return currentValues();
+    } catch (IOException e) {
+      return errorPage(e.getMessage());
+    }
+
   }
 
 }

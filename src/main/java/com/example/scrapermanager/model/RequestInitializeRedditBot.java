@@ -20,8 +20,19 @@ public class RequestInitializeRedditBot {
   private String message;
   @NonNull
   private List<String> userNames;
-  @JsonProperty("isOverWrite")
   @NonNull
-  private boolean isOverWrite;
+  private String clientId;
+  @NonNull
+  private String clientSecret;
+  @NonNull
+  private String loginUserName;
+  @NonNull
+  private String redditPassword;
+  @NonNull
+  private String userAgent;
+  @NonNull
+  private String projectPath;
+
+
 
 }

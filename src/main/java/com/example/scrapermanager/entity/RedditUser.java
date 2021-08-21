@@ -14,6 +14,5 @@ public class RedditUser {
   private long id;
   private String userName;
   private RedditBot redditBot;
-  private boolean isSent;
 
 }

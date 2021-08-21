@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RedditBot {
+public class RedditBot implements Comparable{
 
   private long id;
   private String botName;
@@ -21,5 +21,18 @@ public class RedditBot {
   private BotStatus status;
   private String createdDate;
   private String message;
+  private String clientId;
+  private String clientSecret;
+  private String password;
+  private String loginUserName;
+  private String userAgent;
+  private String projectPath;
+  private int notSent;
+  private int totalRequestSize;
 
+
+  @Override
+  public int compareTo(Object o) {
+    return 0;
+  }
 }
